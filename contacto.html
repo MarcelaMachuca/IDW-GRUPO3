@@ -19,36 +19,35 @@
         </nav>
     </header>
 
+    <!--probar-->
     <main class="contacto">
-        <h2>Contáctanos</h2>
+    <div class="formulario">
+        <h3>Envíanos un mensaje</h3>
+        <form action="#" method="post">
+            <label for="nombre">Nombre y Apellido</label>
+            <input type="text" id="nombre" name="nombre" required>
 
-        <div class="info-contacto">
-            <h3>Dirección</h3>
-            <p class="direccion">Av. Laprida 735, Ciudad de Buenos Aires, CP 1025</p>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
 
-            <h3>Teléfono</h3>
-            <p>+54 11 1234-5678</p>
+            <label for="mensaje">Mensaje</label>
+            <textarea id="mensaje" name="mensaje" rows="5" required></textarea>
 
-            <h3>Email</h3>
-            <p><a href="mailto:contacto@clinicasaludintegral.com">contacto@clinicasaludintegral.com</a></p>
-        </div>
+            <button type="submit">Enviar Mensaje</button>
+        </form>
+    </div>
 
-        <div class="formulario">
-            <h3>Envíanos un mensaje</h3>
-            <form action="#" method="post">
-                <label for="nombre">Nombre y Apellido</label>
-                <input type="text" id="nombre" name="nombre" required>
+    <div class="info-contacto">
+        <h3>Dirección</h3>
+        <p>Av. Laprida 735, Ciudad de Buenos Aires, CP 1025</p>
 
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
+        <h3>Teléfono</h3>
+        <p>+54 11 1234-5678</p>
 
-                <label for="mensaje">Mensaje</label>
-                <textarea id="mensaje" name="mensaje" rows="5" required></textarea>
-
-                <button type="submit">Enviar Mensaje</button>
-            </form>
-        </div>
-    </main>
+        <h3>Email</h3>
+        <p><a href="mailto:contacto@clinicasaludintegral.com">contacto@clinicasaludintegral.com</a></p>
+    </div>
+</main>
 
     <footer>
         <p>&copy; 2025 Clínica Salud Integral. Todos los derechos reservados.</p>

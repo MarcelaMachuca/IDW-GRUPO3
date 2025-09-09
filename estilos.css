@@ -25,7 +25,8 @@ body {
 header {
     background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
     color: white;
-    padding: 1.5rem 5%;
+    padding: 0.1rem 2rem;
+    /*padding: 1.5rem 5%;*/
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -33,6 +34,8 @@ header {
 }
 
 header h1 {
+    margin-left: 50px;   /* espacio externo izquierdo */
+    margin-right: 0px;  /* espacio externo derecho */
     font-size: 1.8rem;
     font-weight: 700;
 }
@@ -141,59 +144,39 @@ main {
     margin: 0.5rem 0;
 }
 
-/* Página de Contacto */
+/*Contacto:*/
 .contacto {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
     gap: 3rem;
+    padding: 2rem 5%;
 }
 
-.info-contacto h3 {
-    color: var(--color-primario);
-    margin: 1.5rem 0 0.5rem;
-}
-.direccion {
-    text-align: left !important;
-    display: block;
-    width: 100%;
-}
-.info-contacto p, .info-contacto a {
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-    color: var(--color-texto);
+.contacto .formulario,
+.contacto .info-contacto {
+    flex: 1;
+    max-width: 500px;
 }
 
-.info-contacto a {
-    text-decoration: none;
-    color: var(--color-secundario);
-}
-
-.info-contacto a:hover {
-    text-decoration: underline;
-}
-
-
-
-.formulario form {
+.contacto .formulario form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.formulario label {
-    font-weight: 600;
-    color: var(--color-primario);
-}
-
-.formulario input,
-.formulario textarea {
+.contacto .formulario input,
+.contacto .formulario textarea {
     padding: 0.8rem;
+    font-size: 1rem;
     border: 1px solid #ddd;
     border-radius: 8px;
-    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.formulario button {
+.contacto .formulario button {
+    width: 50%;
     padding: 0.8rem;
     background: var(--color-primario);
     color: white;
@@ -202,10 +185,27 @@ main {
     font-weight: 600;
     cursor: pointer;
     transition: background 0.3s;
+    align-self: flex-start;
 }
 
-.formulario button:hover {
+.contacto .formulario button:hover {
     background: #3a6bc7;
+}
+
+@media (max-width: 768px) {
+    .contacto {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .contacto .formulario,
+    .contacto .info-contacto {
+        max-width: 100%;
+    }
+
+    .contacto .formulario button {
+        width: 100%;
+    }
 }
 
 /* Footer */
@@ -249,6 +249,7 @@ footer a:hover {
         grid-template-columns: 1fr;
     }
 }
+
 /* Estilos para el logo en el header */
 .logo {
     height: 90px;
