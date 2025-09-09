@@ -2,7 +2,7 @@
 Repositorio remoto Trabajo Final Integrador
 
 Integrantes:
-Tiago Reyes
-Natalia Noemí Ruiz
-Camila Abigail Wagner
+Tiago Reyes,
+Natalia Noemí Ruiz,
+Camila Abigail Wagner,
 Marcela Carina Machuca
