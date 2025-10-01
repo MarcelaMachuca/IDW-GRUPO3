@@ -4,59 +4,114 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contacto - Clínica Salud Integral</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    
     <link rel="stylesheet" href="estilos.css">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <header>
+        <img src="./imagen/logo.png" alt="Logo Clínica Salud Integral" class="logo">
         <h1>Clínica Salud Integral</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="institucional.html">Institucional</a></li>
-                <li><a href="contacto.html">Contacto</a></li>
-            </ul>
+        <nav class="navbar navbar-expand-lg" style="background: none !important;">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-clinica mx-2" href="index.html">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-clinica mx-2" href="institucional.html">Institucional</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-clinica mx-2" href="contacto.html">Contacto</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </nav>
     </header>
 
-    <!--probar-->
-    <main class="contacto">
-    <div class="formulario">
-        <h3>Envíanos un mensaje</h3>
-        <form action="#" method="post">
-            <label for="nombre">Nombre y Apellido</label>
-            <input type="text" id="nombre" name="nombre" required>
+    <main class="py-5">
+        <div class="container">
+            <div class="row g-4">
+               
+                <div class="col-12 col-lg-7">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body p-4">
+                            <h3 class="card-title mb-4" style="color: var(--color-primario);">Envíanos un mensaje</h3>
+                            <form action="mailto:contacto@clinicasaludintegral.com" method="post" enctype="text/plain">
+                                <div class="mb-3">
+                                    <label for="nombre" class="form-label">Nombre y Apellido</label>
+                                    <input type="text" class="form-control" id="nombre" name="nombre" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="mensaje" class="form-label">Mensaje</label>
+                                    <textarea class="form-control" id="mensaje" name="mensaje" rows="5" required></textarea>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-clinica">Enviar Mensaje</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
 
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
+               
+                <div class="col-12 col-lg-5">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body p-4">
+                            <h3 class="card-title mb-4" style="color: var(--color-primario);">Información de Contacto</h3>
+                            
+                            <div class="mb-4">
+                                <h4 class="h5">📍 Dirección</h4>
+                                <p class="mb-0">Av. Laprida 735<br>Ciudad de Buenos Aires, CP 1025</p>
+                            </div>
 
-            <label for="mensaje">Mensaje</label>
-            <textarea id="mensaje" name="mensaje" rows="5" required></textarea>
+                            <div class="mb-4">
+                                <h4 class="h5">📞 Teléfono</h4>
+                                <p class="mb-0">+54 11 1234-5678</p>
+                            </div>
 
-            <button type="submit">Enviar Mensaje</button>
-        </form>
-    </div>
+                            <div class="mb-4">
+                                <h4 class="h5">✉️ Email</h4>
+                                <p class="mb-0">
+                                    <a href="mailto:contacto@clinicasaludintegral.com" class="text-decoration-none">
+                                        contacto@clinicasaludintegral.com
+                                    </a>
+                                </p>
+                            </div>
 
-    <div class="info-contacto">
-        <h3>Dirección</h3>
-        <p>Av. Laprida 735, Ciudad de Buenos Aires, CP 1025</p>
-
-        <h3>Teléfono</h3>
-        <p>+54 11 1234-5678</p>
-
-        <h3>Email</h3>
-        <p><a href="mailto:contacto@clinicasaludintegral.com">contacto@clinicasaludintegral.com</a></p>
-    </div>
-</main>
-
-    <footer>
-        <p>&copy; 2025 Clínica Salud Integral. Todos los derechos reservados.</p>
-        <p><a href="index.html">Volver al Inicio</a> | <a href="institucional.html">Sobre Nosotros</a></p>
-        <div class="redes-sociales">
-            <a href="https://facebook.com" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-            <a href="https://instagram.com" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="https://wa.me/1234567890" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </main>
+
+    <footer class="bg-dark text-white text-center py-4">
+    <p>&copy; 2025 Clínica Salud Integral. Todos los derechos reservados.</p>
+    <p>
+        <a href="index.html" class="text-white text-decoration-none mx-2">Inicio</a> | 
+        <a href="institucional.html" class="text-white text-decoration-none mx-2">Sobre Nosotros</a> | 
+        <a href="contacto.html" class="text-white text-decoration-none mx-2">Contacto</a>
+    </p>
+    <div class="redes-sociales mt-2">
+        <a href="https://facebook.com" target="_blank" aria-label="Facebook" class="text-white mx-2"><i class="fab fa-facebook fa-lg"></i></a>
+        <a href="https://instagram.com" target="_blank" aria-label="Instagram" class="text-white mx-2"><i class="fab fa-instagram fa-lg"></i></a>
+        <a href="https://wa.me/1234567890" target="_blank" aria-label="WhatsApp" class="text-white mx-2"><i class="fab fa-whatsapp fa-lg"></i></a>
+    </div>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 </html>
