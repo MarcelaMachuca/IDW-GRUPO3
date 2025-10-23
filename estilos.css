@@ -320,3 +320,20 @@ footer a:hover {
     align-items: center;
   }
 }
+
+/*Estilos para admin y formularios dinámicos*/
+.table-responsive table th,
+.table-responsive table td {
+        vertical-align: middle;
+}
+
+#formContainer {
+        margin-left: 0;
+}
+
+@media (max-width: 768px) {
+    #formContainer { width: 100%; padding: 0 1rem; }
+}
+
+/*Reservar*/
+.card .form-label { font-weight: 600; }
