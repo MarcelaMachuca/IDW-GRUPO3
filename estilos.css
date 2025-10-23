@@ -7,7 +7,7 @@
     --sombra: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-/* RESET Y BASE */
+
 * {
     margin: 0;
     padding: 0;
@@ -27,7 +27,7 @@ body {
     flex-direction: column;
 }
 
-/* HEADER */
+
 header {
     background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
     color: white;
@@ -72,7 +72,7 @@ header h1 {
     }
 }
 
-/* BOTONES */
+
 .btn-clinica {
     background-color: var(--color-primario) !important;
     border: none !important;
@@ -100,13 +100,13 @@ header h1 {
     }
 }
 
-/* MAIN */
+
 main {
     flex: 1;
     padding: 3rem 5%;
 }
 
-/* TARJETAS PROFESIONALES */
+
 .profesionales-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -147,7 +147,7 @@ main {
     border-radius: 0 0 12px 12px;
 }
 
-/* TARJETAS GENERALES */
+
 .card h3.card-title {
     color: var(--color-primario);
 }
@@ -156,7 +156,7 @@ main {
     color: #555;
 }
 
-/* CONTACTO */
+
 .contacto {
     display: flex;
     flex-direction: column;
@@ -174,7 +174,7 @@ main {
     }
 }
 
-/* FOOTER */
+
 footer {
     background: #333;
     color: white;
@@ -192,7 +192,7 @@ footer a:hover {
     color: var(--color-primario);
 }
 
-/* REDES SOCIALES */
+
 .redes-sociales {
     margin-top: 1rem;
     display: flex;
