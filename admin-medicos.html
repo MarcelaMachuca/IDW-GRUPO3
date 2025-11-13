@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administrar Médicos - Clínica Salud Integral</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="estilos.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<header>
+  <div class="container header-container">
+    <div class="d-flex align-items-center gap-2">
+      <img src="./imagen/logo.png" alt="Logo Clínica" class="logo">
+      <h1>Clínica Salud Integral</h1>
+    </div>
+
+    <div class="d-flex flex-column flex-md-row gap-2 mt-2 mt-md-0">
+      <a href="panel-admin.html" class="btn btn-outline-light btn-sm">
+        <i class="fas fa-arrow-left me-1"></i> Volver al Panel
+      </a>
+      <a href="index.html" class="btn btn-outline-light btn-sm">
+        <i class="fas fa-home me-1"></i> Ir al Inicio
+      </a>
+      <button id="btnLogout" class="btn btn-light btn-sm">
+        <i class="fas fa-sign-out-alt me-1"></i> Cerrar sesión
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="container py-5">
+
+  <h2 class="text-center text-primary mb-4">Administración de Médicos</h2>
+
+  <!-- Formulario -->
+  <div class="card shadow-sm mb-5">
+    <div class="card-header bg-primary text-white">
+      <h2 class="h5 m-0" id="formTitulo">Agregar Nuevo Médico</h2>
+    </div>
+    <div class="card-body">
+      <form id="formMedico">
+        <input type="hidden" id="medicoId">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label for="matricula" class="form-label">Matrícula Profesional</label>
+            <input type="number" id="matricula" class="form-control" required>
+          </div>
+          <div class="col-md-4">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" id="nombre" class="form-control" required>
+          </div>
+          <div class="col-md-4">
+            <label for="apellido" class="form-label">Apellido</label>
+            <input type="text" id="apellido" class="form-control" required>
+          </div>
+          <div class="col-md-6">
+            <label for="especialidadId" class="form-label">Especialidad</label>
+            <select id="especialidadId" class="form-select" required>
+              <option value="">Seleccione una especialidad</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="valorConsulta" class="form-label">Valor de Consulta ($)</label>
+            <input type="number" id="valorConsulta" class="form-control" step="0.01" required>
+          </div>
+          <div class="col-12">
+            <label for="obrasSociales" class="form-label">Obras Sociales que acepta</label>
+            <select id="obrasSociales" class="form-select" multiple size="5">
+            </select>
+            <div class="form-text"></div>
+          </div>
+          <div class="col-12">
+            <label for="descripcion" class="form-label">Descripción</label>
+            <textarea id="descripcion" class="form-control" rows="2"></textarea>
+          </div>
+          <div class="col-12">
+            <label for="fotoMedico" class="form-label">Fotografía</label>
+            <input type="file" id="fotoMedico" accept="image/*" class="form-control">
+            <div class="mt-2 text-center">
+              <img id="previewFoto" src="" class="img-fluid rounded shadow-sm" style="max-height:200px; display:none;">
+            </div>
+          </div>
+          <div class="col-12 text-end">
+            <button type="submit" class="btn btn-clinica mt-3" id="btnGuardar">
+              <i class="fas fa-save me-2"></i>Guardar Médico
+            </button>
+            <button type="button" class="btn btn-secondary mt-3 d-none" id="btnCancelar">
+              <i class="fas fa-times me-2"></i>Cancelar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Listado -->
+  <div class="card shadow-sm">
+    <div class="card-header bg-secondary text-white">
+      <h2 class="h5 m-0">Listado de Médicos</h2>
+    </div>
+    <div class="card-body">
+      <div id="listaMedicos" class="row g-4"></div>
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <a href="panel-admin.html" class="btn btn-outline-secondary">
+      <i class="fas fa-arrow-left me-2"></i> Volver al Panel
+    </a>
+  </div>
+
+</main>
+
+<footer>
+  <p>&copy; 2025 Clínica Salud Integral. Todos los derechos reservados.</p>
+</footer>
+
+<script type="module">
+  import { requiereAutenticacion, logout } from './js/auth.js';
+  import { listarMedicos, crearMedico, actualizarMedico, eliminarMedico } from './js/medicos-storage.js';
+  import { listarEspecialidades, obtenerEspecialidad } from './js/especialidades-storage.js';
+  import { listarObrasSociales, obtenerObraSocial } from './js/obras-sociales-storage.js';
+
+  if (!requiereAutenticacion()) {
+    throw new Error("Redirigiendo al login...");
+  }
+
+  document.getElementById('btnLogout').addEventListener('click', () => {
+    logout();
+    window.location.href = 'login.html';
+  });
+
+  const form = document.getElementById('formMedico');
+  const preview = document.getElementById('previewFoto');
+  const listaContainer = document.getElementById('listaMedicos');
+  const formTitulo = document.getElementById('formTitulo');
+  const btnGuardar = document.getElementById('btnGuardar');
+  const btnCancelar = document.getElementById('btnCancelar');
+  let archivoSeleccionado = null;
+
+  // Cargar especialidades
+  function cargarEspecialidades() {
+    const especialidades = listarEspecialidades();
+    const select = document.getElementById('especialidadId');
+    select.innerHTML = '<option value="">Seleccione una especialidad</option>';
+    especialidades.forEach(e => {
+      const option = document.createElement('option');
+      option.value = e.id;
+      option.textContent = e.nombre;
+      select.appendChild(option);
+    });
+  }
+
+  // Cargar obras sociales
+  function cargarObrasSociales() {
+    const obras = listarObrasSociales();
+    const select = document.getElementById('obrasSociales');
+    select.innerHTML = '';
+    obras.forEach(o => {
+      const option = document.createElement('option');
+      option.value = o.id;
+      option.textContent = o.nombre;
+      select.appendChild(option);
+    });
+  }
+
+  document.getElementById('fotoMedico').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    archivoSeleccionado = file;
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => { 
+        preview.src = reader.result; 
+        preview.style.display = 'block'; 
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('medicoId').value;
+    
+    // Obtener obras sociales seleccionadas
+    const selectOS = document.getElementById('obrasSociales');
+    const obrasSocialesSeleccionadas = Array.from(selectOS.selectedOptions).map(opt => Number(opt.value));
+    
+    const datos = {
+      matricula: Number(document.getElementById('matricula').value),
+      nombre: document.getElementById('nombre').value.trim(),
+      apellido: document.getElementById('apellido').value.trim(),
+      especialidadId: Number(document.getElementById('especialidadId').value), // ✅ Cambiado
+      descripcion: document.getElementById('descripcion').value.trim(),
+      obrasSociales: obrasSocialesSeleccionadas,
+      valorConsulta: parseFloat(document.getElementById('valorConsulta').value)
+    };
+    
+    if (id) {
+      await actualizarMedico(Number(id), datos, archivoSeleccionado);
+      alert('✅ Médico actualizado correctamente');
+    } else {
+      await crearMedico(datos, archivoSeleccionado);
+      alert('✅ Médico agregado correctamente');
+    }
+    resetFormulario();
+    renderMedicos();
+  });
+
+  function renderMedicos() {
+    const medicos = listarMedicos();
+    listaContainer.innerHTML = medicos.length === 0
+      ? '<p class="text-muted text-center">No hay médicos registrados.</p>'
+      : medicos.map(m => {
+        // ✅ Obtener especialidad por ID
+        const especialidad = obtenerEspecialidad(m.especialidadId);
+        const nombreEsp = especialidad ? especialidad.nombre : 'Sin especialidad';
+        
+        return `
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm border-0">
+          <img src="${m.fotografia ? 'data:image/jpeg;base64,' + m.fotografia : (m.imagen || 'imagen/default-doctor.jpg')}" 
+               class="card-img-top" alt="${m.nombre}" style="height:220px;object-fit:cover;">
+          <div class="card-body text-center">
+            <h5>${m.apellido}, ${m.nombre}</h5>
+            <p class="text-muted">${nombreEsp}</p>
+            <p class="small">${m.descripcion || ''}</p>
+            <p class="fw-bold text-success">$${m.valorConsulta.toFixed(2)}</p>
+            <p class="small text-muted">Matrícula: ${m.matricula}</p>
+            <div class="d-flex justify-content-center gap-2 mt-3">
+              <button class="btn btn-sm btn-outline-primary" onclick="editarMedico(${m.id})">
+                <i class="fas fa-edit"></i> Editar
+              </button>
+              <button class="btn btn-sm btn-outline-danger" onclick="borrarMedico(${m.id})">
+                <i class="fas fa-trash"></i> Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+      }).join('');
+  }
+
+  window.editarMedico = (id) => {
+    const medico = listarMedicos().find(m => m.id === id);
+    if (!medico) return;
+    
+    document.getElementById('medicoId').value = medico.id;
+    document.getElementById('matricula').value = medico.matricula;
+    document.getElementById('nombre').value = medico.nombre;
+    document.getElementById('apellido').value = medico.apellido;
+    document.getElementById('especialidadId').value = medico.especialidadId || ''; // ✅ Cambiado
+    document.getElementById('descripcion').value = medico.descripcion || '';
+    document.getElementById('valorConsulta').value = medico.valorConsulta || '';
+    
+    // Seleccionar obras sociales
+    const selectOS = document.getElementById('obrasSociales');
+    Array.from(selectOS.options).forEach(option => {
+      option.selected = medico.obrasSociales && medico.obrasSociales.includes(Number(option.value));
+    });
+    
+    if (medico.fotografia) preview.src = 'data:image/jpeg;base64,' + medico.fotografia;
+    else if (medico.imagen) preview.src = medico.imagen;
+    preview.style.display = 'block';
+    
+    formTitulo.textContent = 'Editar Médico';
+    btnGuardar.innerHTML = '<i class="fas fa-save me-2"></i>Actualizar Médico';
+    btnCancelar.classList.remove('d-none');
+  };
+
+  window.borrarMedico = (id) => {
+    if (confirm('¿Seguro que deseas eliminar este médico?')) {
+      eliminarMedico(id);
+      renderMedicos();
+      alert('🗑️ Médico eliminado correctamente');
+      resetFormulario();
+    }
+  };
+
+  btnCancelar.addEventListener('click', resetFormulario);
+
+  function resetFormulario() {
+    form.reset();
+    archivoSeleccionado = null;
+    preview.style.display = 'none';
+    document.getElementById('medicoId').value = '';
+    formTitulo.textContent = 'Agregar Nuevo Médico';
+    btnGuardar.innerHTML = '<i class="fas fa-save me-2"></i>Guardar Médico';
+    btnCancelar.classList.add('d-none');
+  }
+
+  // Inicializar
+  cargarEspecialidades();
+  cargarObrasSociales();
+  renderMedicos();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
