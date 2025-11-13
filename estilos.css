@@ -282,7 +282,7 @@ footer a:hover {
   }
 }
 
-/*Estilos para admin y formularios dinámicos*/
+
 .table-responsive table th,
 .table-responsive table td {
         vertical-align: middle;
@@ -296,5 +296,79 @@ footer a:hover {
     #formContainer { width: 100%; padding: 0 1rem; }
 }
 
-/*Reservar*/
+
 .card .form-label { font-weight: 600; }
+
+.card-img-top {
+  object-fit: cover;
+  object-position: top;
+  height: 250px;
+  width: 100%;
+}
+
+
+.step {
+    display: none;
+}
+.step.active {
+      display: block;
+}
+.turno-card {
+      cursor: pointer;
+      transition: all 0.3s;
+}
+.turno-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.turno-card.selected {
+      border: 2px solid var(--color-primario);
+      background-color: #e8f4ff;
+}
+.progress-step {
+      flex: 1;
+      text-align: center;
+      padding: 1rem;
+      position: relative;
+}
+.progress-step::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 2px;
+      background: #ddd;
+      z-index: -1;
+}
+.progress-step:last-child::after {
+      display: none;
+}
+.progress-step .step-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #ddd;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+}
+.progress-step.completed .step-number {
+      background: var(--color-primario);
+      color: white;
+}
+.progress-step.active .step-number {
+      background: var(--color-secundario);
+      color: white;
+}
+
+.modal-backdrop {
+  z-index: 1040 !important;
+}
+
+.modal {
+  z-index: 1050 !important;
+}
+  
