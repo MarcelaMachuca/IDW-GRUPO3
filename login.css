@@ -1,0 +1,30 @@
+body {
+  background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-card {
+  max-width: 450px;
+  width: 100%;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.login-header {
+  background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
+  color: white;
+  padding: 2rem;
+  border-radius: 15px 15px 0 0;
+  text-align: center;
+}
+
+.login-header img {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
