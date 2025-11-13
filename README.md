@@ -153,7 +153,7 @@ Administra las reservas realizadas por pacientes.
 
 **Credenciales por defecto:**
 
-- **Usuario:** `admin`  
+- ** Usuario:** `admin`  
 - **Contraseña:** `admin123`
 
 
