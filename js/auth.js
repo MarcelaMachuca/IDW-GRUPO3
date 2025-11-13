@@ -1,55 +1,88 @@
+const SESSION_KEY = 'SESSION_KEY';
+const USER_DATA_KEY = 'USER_DATA';
 
-const USUARIOS_KEY = 'clinica_usuarios';
-const SESSION_KEY = 'clinica_session';
+export async function login(usuario, password) {
+  try {
+    const response = await fetch('https://dummyjson.com/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: usuario, password: password })
+    });
 
+    const data = await response.json();
 
-const USUARIOS_INICIALES = [
-  {
-    id: 1,
-    usuario: 'admin',
-    password: 'admin123',
-    nombre: 'Administrador',
-    rol: 'admin'
-  }
-];
-
-
-function inicializarUsuarios() {
-  if (!localStorage.getItem(USUARIOS_KEY)) {
-    localStorage.setItem(USUARIOS_KEY, JSON.stringify(USUARIOS_INICIALES));
+    if (response.ok && data.accessToken) {
+      // Guardar token y datos del usuario
+      sessionStorage.setItem(SESSION_KEY, data.accessToken);
+      sessionStorage.setItem(USER_DATA_KEY, JSON.stringify({
+        id: data.id,
+        username: data.username,
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName
+      }));
+      return { success: true, user: data };
+    } else {
+      return { success: false, message: data.message || 'Usuario o contraseña incorrectos' };
+    }
+  } catch (error) {
+    console.error('Error en login:', error);
+    return { success: false, message: 'Error de conexión. Intente nuevamente.' };
   }
 }
-
-
-export function login(usuario, password) {
-  inicializarUsuarios();
-  const usuarios = JSON.parse(localStorage.getItem(USUARIOS_KEY));
-  const user = usuarios.find(u => u.usuario === usuario && u.password === password);
-  
-  if (user) {
-    const session = {
-      id: user.id,
-      usuario: user.usuario,
-      nombre: user.nombre,
-      rol: user.rol,
-      loginTime: new Date().toISOString()
-    };
-    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    return { success: true, user: session };
-  }
-  
-  return { success: false, message: 'Usuario o contraseña incorrectos' };
-}
-
 
 export function logout() {
-  localStorage.removeItem(SESSION_KEY);
+  sessionStorage.removeItem(SESSION_KEY);
+  sessionStorage.removeItem(USER_DATA_KEY);
 }
 
 
 export function verificarSesion() {
-  const session = localStorage.getItem(SESSION_KEY);
-  return session ? JSON.parse(session) : null;
+  const token = sessionStorage.getItem(SESSION_KEY);
+  const userData = sessionStorage.getItem(USER_DATA_KEY);
+  
+  if (token && userData) {
+    return {
+      token,
+      user: JSON.parse(userData)
+    };
+  }
+  return null;
+}
+
+
+export async function verificarSesionConServidor() {
+  const token = sessionStorage.getItem(SESSION_KEY);
+  
+  if (!token) {
+    return null;
+  }
+
+  try {
+    const response = await fetch('https://dummyjson.com/auth/me', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (response.ok) {
+      const user = await response.json();
+      // Actualizar datos del usuario
+      sessionStorage.setItem(USER_DATA_KEY, JSON.stringify({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName
+      }));
+      return user;
+    } else {
+      // Token inválido o expirado
+      logout();
+      return null;
+    }
+  } catch (error) {
+    console.error('Error verificando sesión:', error);
+    return null;
+  }
 }
 
 
@@ -60,4 +93,9 @@ export function requiereAutenticacion() {
     return false;
   }
   return true;
+}
+
+export function obtenerUsuarioActual() {
+  const session = verificarSesion();
+  return session ? session.user : null;
 }

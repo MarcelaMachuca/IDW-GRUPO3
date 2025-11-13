@@ -151,11 +151,13 @@ Administra las reservas realizadas por pacientes.
 ## 🔐 Acceso / Login (versión actual)
 
 
-**Credenciales por defecto:**
+**Credenciales admin:**
 
-- **Usuario:** `admin`  
-- **Contraseña:** `admin123`
+- username: emilys
+- password: emilyspass
 
+- username: michaelw
+- password: michaelwpass
 
 
 ---

@@ -116,15 +116,28 @@
   </footer>
 
   <script type="module">
-    import { verificarSesion, logout } from './js/auth.js';
+    import { requiereAutenticacion, verificarSesionConServidor, logout, obtenerUsuarioActual } from './js/auth.js';
 
-    const session = verificarSesion();
-    if (!session) {
-      window.location.href = 'login.html';
-    } else {
-      document.getElementById('nombreUsuario').textContent = `Hola, ${session.nombre}`;
+    // Verificar autenticación
+    if (!requiereAutenticacion()) {
+      throw new Error("Redirigiendo al login...");
     }
 
+    // Verificar sesión con el servidor y mostrar datos del usuario
+    const usuario = obtenerUsuarioActual();
+    if (usuario) {
+      document.getElementById('nombreUsuario').textContent = `Hola, ${usuario.username}`;
+    }
+
+    // Verificar en segundo plano que el token siga válido
+    verificarSesionConServidor().then(user => {
+      if (!user) {
+        alert('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
+        window.location.href = 'login.html';
+      }
+    });
+
+    // Botón de logout
     document.getElementById('btnLogout').addEventListener('click', () => {
       if (confirm('¿Cerrar sesión?')) {
         logout();
