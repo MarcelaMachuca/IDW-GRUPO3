@@ -22,6 +22,9 @@
       <a href="index.html" class="btn btn-outline-light btn-sm">
         <i class="fa-solid fa-house me-1"></i>Inicio
       </a>
+      <button id="btnLogout" class="btn btn-light btn-sm">
+        <i class="fas fa-sign-out-alt me-1"></i>Cerrar sesión
+      </button>
     </div>
   </div>
 </header>
@@ -90,6 +93,18 @@
   import { listarReservas, eliminarReserva } from './js/reservas-storage.js';
   import { listarMedicos } from './js/medicos-storage.js';
   import { listarEspecialidades } from './js/especialidades-storage.js';
+  import { requiereAutenticacion, logout } from './js/auth.js';
+
+  if (!requiereAutenticacion()) {
+    throw new Error("Redirigiendo al login...");
+  }
+
+  document.getElementById('btnLogout').addEventListener('click', () => {
+    if (confirm('¿Cerrar sesión?')) {
+      logout();
+      window.location.href = 'login.html';
+    }
+  });
 
   const cuerpoTabla = document.getElementById('cuerpoTabla');
   const filtroMedico = document.getElementById('filtroMedico');
