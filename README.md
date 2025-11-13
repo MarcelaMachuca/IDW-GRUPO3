@@ -170,7 +170,7 @@ Administra las reservas realizadas por pacientes.
 ## 🧪 Pruebas y Uso
 
 1. Abrir `index.html` con Live Server o desde la raíz del proyecto (usar Live Server recomendado para módulos ES).  
-2. Ir a **Acceso Administrador** o `login.html`, ingresar con `admin` / `admin123`.  
+2. Ir a **Acceso Administrador** o `login.html`, ingresar con `usuario:admin` `contraseña:admin123`.  
 3. Navegar a **Panel Administrativo** → administrar médicos, especialidades, obras sociales, turnos y reservas.  
 4. Comprobar que las operaciones CRUD actualizan la tabla y `localStorage`.
 
