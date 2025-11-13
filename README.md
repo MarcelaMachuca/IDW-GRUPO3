@@ -3,8 +3,8 @@
 📋 Descripción General
 
 Este proyecto es una aplicación web de gestión de una clínica, desarrollada en HTML, CSS, JavaScript (ES Modules) y Bootstrap 5, que funciona completamente en el navegador utilizando LocalStorage como base de datos local.
+Permite gestionar la informacio de médicos, especialidades, obras sociales y turnos, así como realizar reservas desde la interfaz pública.
 
-Permite gestionar la información de médicos, especialidades, obras sociales y turnos, así como realizar reservas desde la interfaz pública.
 ---
 
 
