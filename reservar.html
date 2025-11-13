@@ -28,28 +28,42 @@
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label">Documento</label>
-              <input type="text" id="documento" class="form-control" required />
+              <input type="text" id="documento" class="form-control" required placeholder="Ej: 12345678" />
             </div>
             <div class="col-md-6">
               <label class="form-label">Apellido y Nombre</label>
-              <input type="text" id="apellidoNombre" class="form-control" required />
+              <input type="text" id="apellidoNombre" class="form-control" required placeholder="Ej: Pérez, Juan" />
             </div>
             <div class="col-md-6">
               <label class="form-label">Especialidad</label>
-              <select id="especialidad" class="form-select" required></select>
+              <select id="especialidad" class="form-select" required>
+                <option value="">Seleccione una especialidad</option>
+              </select>
             </div>
             <div class="col-md-6">
               <label class="form-label">Médico</label>
-              <select id="medico" class="form-select" required></select>
+              <select id="medico" class="form-select" required>
+                <option value="">Seleccione una especialidad primero</option>
+              </select>
             </div>
             <div class="col-md-6">
               <label class="form-label">Obra Social</label>
-              <select id="obraSocial" class="form-select" required></select>
+              <select id="obraSocial" class="form-select" required>
+                <option value="">Seleccione una obra social</option>
+              </select>
             </div>
             <div class="col-md-6">
               <label class="form-label">Turno</label>
-              <select id="turno" class="form-select" required></select>
+              <select id="turno" class="form-select" required>
+                <option value="">Seleccione un médico primero</option>
+              </select>
             </div>
+          </div>
+
+          <!-- Info de valor a pagar -->
+          <div id="infoValor" class="alert alert-info mt-3" style="display:none;">
+            <strong><i class="fa-solid fa-dollar-sign me-2"></i>Valor de la consulta:</strong>
+            <span id="valorTexto"></span>
           </div>
 
           <div class="text-end mt-4">
@@ -72,7 +86,7 @@
   import { listarEspecialidades, obtenerEspecialidad } from './js/especialidades-storage.js';
   import { listarMedicos, obtenerMedico } from './js/medicos-storage.js';
   import { listarObrasSociales } from './js/obras-sociales-storage.js';
-  import { listarTurnosDisponibles, obtenerTurno } from './js/turnos-storage.js';
+  import { listarTurnos } from './js/turnos-storage.js';
   import { crearReserva } from './js/reservas-storage.js';
   import { calcularValorConDescuento } from './js/obras-sociales-storage.js';
 
@@ -81,12 +95,25 @@
   const selectMedico = document.getElementById('medico');
   const selectObraSocial = document.getElementById('obraSocial');
   const selectTurno = document.getElementById('turno');
+  const infoValor = document.getElementById('infoValor');
+  const valorTexto = document.getElementById('valorTexto');
+
+  // Obtener parámetros de la URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const medicoIdParam = urlParams.get('medicoId');
+  const especialidadIdParam = urlParams.get('especialidadId');
 
   // Cargar especialidades
   function cargarEspecialidades() {
     const especialidades = listarEspecialidades();
     selectEspecialidad.innerHTML = '<option value="">Seleccione una especialidad</option>' +
       especialidades.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('');
+    
+    // Si viene especialidadId por URL, pre-seleccionarla
+    if (especialidadIdParam) {
+      selectEspecialidad.value = especialidadIdParam;
+      cargarMedicos(); // Cargar médicos automáticamente
+    }
   }
 
   // Cargar médicos según especialidad
@@ -94,18 +121,25 @@
     const especialidadId = selectEspecialidad.value;
     if (!especialidadId) {
       selectMedico.innerHTML = '<option value="">Seleccione una especialidad primero</option>';
+      selectTurno.innerHTML = '<option value="">Seleccione un médico primero</option>';
       return;
     }
     const medicos = listarMedicos().filter(m => m.especialidadId == especialidadId);
     selectMedico.innerHTML = '<option value="">Seleccione un médico</option>' +
       medicos.map(m => `<option value="${m.id}">${m.apellido}, ${m.nombre}</option>`).join('');
+    
+    // Si viene medicoId por URL, pre-seleccionarlo
+    if (medicoIdParam) {
+      selectMedico.value = medicoIdParam;
+      cargarTurnos(); // Cargar turnos automáticamente
+    }
   }
 
   // Cargar obras sociales
   function cargarObrasSociales() {
     const obras = listarObrasSociales();
     selectObraSocial.innerHTML = '<option value="">Seleccione una obra social</option>' +
-      obras.map(o => `<option value="${o.id}">${o.nombre}</option>`).join('');
+      obras.map(o => `<option value="${o.id}">${o.nombre} (${o.porcentaje}% descuento)</option>`).join('');
   }
 
   // Cargar turnos disponibles según médico
@@ -115,18 +149,63 @@
       selectTurno.innerHTML = '<option value="">Seleccione un médico primero</option>';
       return;
     }
-    const turnos = listarTurnosDisponibles().filter(t => t.medicoId == medicoId);
-    selectTurno.innerHTML = turnos.length > 0
-      ? '<option value="">Seleccione un turno</option>' + turnos.map(t => `
-          <option value="${t.id}">
-            ${new Date(t.fecha + 'T00:00').toLocaleDateString('es-AR')} - ${t.hora}
-          </option>`).join('')
-      : '<option value="">No hay turnos disponibles</option>';
+    
+    // Obtener TODOS los turnos y filtrar por médico y disponibilidad
+    const todosTurnos = listarTurnos();
+    const turnosDisponibles = todosTurnos.filter(t => {
+      return t.medicoId == medicoId && t.disponible !== false && t.estado !== 'Completado' && t.estado !== 'Cancelado';
+    });
+    
+    console.log('Todos los turnos:', todosTurnos);
+    console.log('Turnos filtrados para médico', medicoId, ':', turnosDisponibles);
+    
+    if (turnosDisponibles.length > 0) {
+      selectTurno.innerHTML = '<option value="">Seleccione un turno</option>' + 
+        turnosDisponibles.map(t => {
+          const fecha = new Date(t.fecha + 'T00:00');
+          const fechaFormateada = fecha.toLocaleDateString('es-AR', { 
+            weekday: 'short', 
+            year: 'numeric', 
+            month: 'short', 
+            day: 'numeric' 
+          });
+          return `<option value="${t.id}">${fechaFormateada} - ${t.hora}</option>`;
+        }).join('');
+    } else {
+      selectTurno.innerHTML = '<option value="">No hay turnos disponibles para este médico</option>';
+    }
+  }
+
+  // Calcular y mostrar el valor a pagar
+  function actualizarValor() {
+    const medicoId = selectMedico.value;
+    const obraSocialId = selectObraSocial.value;
+    
+    if (medicoId && obraSocialId) {
+      const medico = obtenerMedico(Number(medicoId));
+      if (medico) {
+        const valorTotal = calcularValorConDescuento(medico.valorConsulta, Number(obraSocialId));
+        valorTexto.textContent = `$${valorTotal.toFixed(2)}`;
+        infoValor.style.display = 'block';
+      }
+    } else {
+      infoValor.style.display = 'none';
+    }
   }
 
   // Eventos de selección
-  selectEspecialidad.addEventListener('change', cargarMedicos);
-  selectMedico.addEventListener('change', cargarTurnos);
+  selectEspecialidad.addEventListener('change', () => {
+    cargarMedicos();
+    selectTurno.innerHTML = '<option value="">Seleccione un médico primero</option>';
+    infoValor.style.display = 'none';
+  });
+  
+  selectMedico.addEventListener('change', () => {
+    cargarTurnos();
+    actualizarValor();
+  });
+  
+  selectObraSocial.addEventListener('change', actualizarValor);
 
   // Enviar formulario
   formReserva.addEventListener('submit', (e) => {
@@ -153,6 +232,12 @@
       formReserva.reset();
       selectMedico.innerHTML = '<option value="">Seleccione una especialidad primero</option>';
       selectTurno.innerHTML = '<option value="">Seleccione un médico primero</option>';
+      infoValor.style.display = 'none';
+      
+      // Redirigir a index después de 2 segundos
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 2000);
       
     } catch (error) {
       alert('⚠️ Error al confirmar la reserva: ' + error.message);
